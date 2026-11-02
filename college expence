@@ -1,0 +1,165 @@
+
+#include <stdio.h>
+
+struct Expense
+{
+    char name[50];
+    char category[30];
+    float amount;
+};
+
+struct Expense e[100];
+
+int count = 0;
+float budget;
+
+// Function to add an expense
+int addExpense()
+{
+    if(count >= 100)
+    {
+        printf("\nExpense limit reached!\n");
+        return 0;
+    }
+
+    printf("\nEnter expense name: ");
+    scanf(" %49[^\n]", e[count].name);
+
+    printf("Enter category (Food/Travel/Books/Other): ");
+    scanf(" %29s", e[count].category);
+
+    printf("Enter amount: Rs. ");
+    scanf("%f", &e[count].amount);
+
+    if(e[count].amount <= 0)
+    {
+        printf("Invalid amount!\n");
+        return 0;
+    }
+
+    count++;
+
+    printf("\nExpense added successfully!\n");
+    return 1;
+}
+
+// Function to display all expenses
+int viewExpenses()
+{
+    int i;
+
+    if(count == 0)
+    {
+        printf("\nNo expenses recorded yet!\n");
+        return 0;
+    }
+
+    printf("\n========== EXPENSE LIST ==========\n");
+
+    for(i = 0; i < count; i++)
+    {
+        printf("\nExpense %d\n", i + 1);
+        printf("Name: %s\n", e[i].name);
+        printf("Category: %s\n", e[i].category);
+        printf("Amount: Rs. %.2f\n", e[i].amount);
+    }
+
+    return 1;
+}
+
+// Function to calculate total expenses
+float calculateTotal()
+{
+    int i;
+    float total = 0;
+
+    for(i = 0; i < count; i++)
+    {
+        total = total + e[i].amount;
+    }
+
+    return total;
+}
+
+// Function to check remaining budget
+int checkBudget()
+{
+    float total, remaining;
+
+    total = calculateTotal();
+    remaining = budget - total;
+
+    printf("\n========== BUDGET REPORT ==========\n");
+    printf("Monthly Budget: Rs. %.2f\n", budget);
+    printf("Total Expenses: Rs. %.2f\n", total);
+    printf("Remaining Budget: Rs. %.2f\n", remaining);
+
+    if(remaining < 0)
+        printf("WARNING! You have exceeded your budget.\n");
+    else
+        printf("You are within your budget.\n");
+
+    return 1;
+}
+
+// Main function
+int main()
+{
+    int choice;
+
+    printf("====================================\n");
+    printf("       COLLEGE EXPENSE TRACKER\n");
+    printf("====================================\n");
+
+    printf("\nEnter your monthly pocket money: Rs. ");
+    scanf("%f", &budget);
+
+    if(budget <= 0)
+    {
+        printf("Invalid budget!\n");
+        return 0;
+    }
+
+    do
+    {
+        printf("\n========== MAIN MENU ==========\n");
+        printf("1. Add Expense\n");
+        printf("2. View All Expenses\n");
+        printf("3. Calculate Total Expenses\n");
+        printf("4. Check Remaining Budget\n");
+        printf("5. Exit\n");
+
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice)
+        {
+            case 1:
+                addExpense();
+                break;
+
+            case 2:
+                viewExpenses();
+                break;
+
+            case 3:
+                printf("\nTotal Expenses: Rs. %.2f\n",
+                       calculateTotal());
+                break;
+
+            case 4:
+                checkBudget();
+                break;
+
+            case 5:
+                printf("\nThank you for using College Expense Tracker!\n");
+                break;
+
+            default:
+                printf("\nInvalid choice! Please try again.\n");
+        }
+
+    } while(choice != 5);
+
+    return 0;
+}
